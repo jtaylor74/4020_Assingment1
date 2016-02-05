@@ -3,6 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_url"/>
     <EditText
         android:id="@+id/etUrl"
         android:inputType="textUri"
@@ -10,6 +15,11 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_url"/>
 
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_title"/>
     <EditText
         android:id="@+id/etTitle"
         android:inputType="textUri"
@@ -17,11 +27,22 @@
         android:layout_height="wrap_content"
         android:hint="@string/hint_title"/>
 
+    <TextView
+        android:id="@+id/tvNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_note"/>
     <EditText
         android:id="@+id/etNote"
         android:inputType="textUri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_note"/>
-
+<!--
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/btn_add"/>
+-->
 </LinearLayout>

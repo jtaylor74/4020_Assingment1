@@ -5,6 +5,10 @@
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="error_write">Error when writing&#8230;</string>
+    <string name="text_url">Url:</string>
+    <string name="text_title">Title:</string>
+    <string name="text_note">Note:</string>
+    <string name="btn_add">Add</string>
     <string name="hint_url">Enter URL</string>
     <string name="hint_title">Enter title</string>
     <string name="hint_note">Enter a note</string>

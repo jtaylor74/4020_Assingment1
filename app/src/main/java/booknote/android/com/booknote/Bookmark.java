@@ -41,4 +41,9 @@ public class Bookmark {
     public void setNote(String note) {
         this.mNote = note;
     }
+
+    @Override
+    public String toString() {
+        return mTitle;
+    }
 }

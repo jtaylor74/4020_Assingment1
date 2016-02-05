@@ -16,14 +16,20 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.jar.Attributes;
 
@@ -36,6 +42,7 @@ public class BookNoteActivity extends ListActivity {
     private final String FILE_BOOKMARK = "Bookmarks.csv";
 
     String url, title, note;
+    int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,17 +71,11 @@ public class BookNoteActivity extends ListActivity {
         //noinspection SimplifiableIfStatement
         // intent action: 1 - create bookmark, 2 - edit bookmark, 3 - delete bookmark
 
+        Intent intent = new Intent(BookNoteActivity.this, ManageActivity.class);
         switch(id) {
             case R.id.action_add:
-                Intent intent = new Intent(BookNoteActivity.this, ManageActivity.class);
-                intent.putExtra("action", 1);
-                BookNoteActivity.this.startActivity(intent);
-                return true;
-            case R.id.action_edit:
-
-                return true;
-            case R.id.action_delete:
-
+                intent.putExtra("action", "create");
+                BookNoteActivity.this.startActivityForResult(intent, 100);
                 return true;
         }
 
@@ -82,8 +83,41 @@ public class BookNoteActivity extends ListActivity {
     }
 
     @Override
-    protected void onListItemClick (ListView l, View v, int position, long id) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        Log.i("RESULTS CODE :: ", resultCode + "");
+        switch(resultCode) {
+            case 100:
+                adapter.add(new Bookmark(intent.getExtras().get("url").toString(),
+                        intent.getExtras().get("title").toString(),
+                        intent.getExtras().get("note").toString()));
 
+                //writeData(intent.getExtras().get("url").toString(), intent.getExtras().get("title").toString(), intent.getExtras().get("note").toString());
+                break;
+            case 200:
+                adapter.remove(adapter.getItem(pos ));
+                adapter.notifyDataSetChanged();
+                adapter.add(new Bookmark(intent.getExtras().get("url").toString(),
+                        intent.getExtras().get("title").toString(),
+                        intent.getExtras().get("note").toString()));
+                adapter.notifyDataSetChanged();
+
+                break;
+        }
+    }
+
+
+    @Override
+    protected void onListItemClick (ListView l, View v, int position, long id) {
+        Intent intent = new Intent(BookNoteActivity.this, ManageActivity.class);
+        intent.putExtra("action", "update");
+        intent.putExtra("url", adapter.getItem(position).getUrl());
+        intent.putExtra("title", adapter.getItem(position).getTitle());
+        intent.putExtra("note", adapter.getItem(position).getNote());
+
+        pos = position;
+
+        BookNoteActivity.this.startActivityForResult(intent, 200);
     }
 
     private ArrayList<Bookmark> readData() {
@@ -91,34 +125,45 @@ public class BookNoteActivity extends ListActivity {
 
         try {
             FileInputStream fis = openFileInput(FILE_BOOKMARK);
-            Scanner scanner = new Scanner(fis);
-            while (scanner.hasNext()) {
-                String url = scanner.next();
-                String title = scanner.next();
-                String note = scanner.next();
+            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            while((line = br.readLine()) != null) {
+                String[] temp = line.split(",");
+
+                String url = temp[0];
+                String title = temp[1];
+                String note = temp[2];
                 Bookmark bookmark = new Bookmark(url, title, note);
                 bookmarks.add(bookmark);
             }
-            scanner.close();
+
+
         } catch (FileNotFoundException e) {
+            //
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         return bookmarks;
     }
 
-    public void writeData() {
+    public void writeData(String url, String title, String note) {
         try {
             FileOutputStream fos = openFileOutput(FILE_BOOKMARK, Context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
             BufferedWriter bw = new BufferedWriter(osw);
             PrintWriter pw = new PrintWriter(bw);
 
+            checkEmpty();
+            pw.println(url + "," + title + "," + note);
+
+            /*
             // format: url, title, note
             for (int i = 0; i < adapter.getCount(); i++) {
                 Bookmark bookmark = adapter.getItem(i);
-                pw.println(bookmark.getUrl() + ", " + bookmark.getTitle() + ", " + bookmark.getNote());
+                pw.println(bookmark.getUrl() + "," + bookmark.getTitle() + "," + bookmark.getNote());
             }
+            */
 
             pw.close();
         } catch (FileNotFoundException e) {
