@@ -8,8 +8,10 @@
     <string name="text_url">Url:</string>
     <string name="text_title">Title:</string>
     <string name="text_note">Note:</string>
-    <string name="btn_add">Add</string>
+    <string name="btn_url">Go to URL</string>
     <string name="hint_url">Enter URL</string>
     <string name="hint_title">Enter title</string>
     <string name="hint_note">Enter a note</string>
+    <string name="dialog_delete">Delete Bookmark</string>
+    <string name="message_delete">Are you sure you want to delete this bookmark?</string>
 </resources>

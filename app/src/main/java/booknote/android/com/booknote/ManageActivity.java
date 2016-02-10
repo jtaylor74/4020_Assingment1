@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -20,7 +21,7 @@ import android.widget.LinearLayout;
  */
 public class ManageActivity extends Activity {
     private EditText etUrl, etTitle, etNote;
-    private Button btnAdd;
+    private Button btnUrl;
     public String mAction, mUrl, mTitle, mNote;
     public Intent mIntent, i;
 
@@ -44,39 +45,22 @@ public class ManageActivity extends Activity {
 
         i = new Intent();
 
-        /*
-        btnAdd = (Button) findViewById(R.id.btn_add);
-
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            Intent i = new Intent();
+        btnUrl = (Button) findViewById(R.id.btn_url);
+        btnUrl.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                switch(mAction) {
-                    case "create":
-                        createBookmark(etUrl.getText().toString(), etTitle.getText().toString(), etNote.getText().toString());
+                String url = etUrl.getText().toString();
 
-                        i.putExtra("url", mUrl);
-                        i.putExtra("title", mTitle);
-                        i.putExtra("note", mNote);
-
-                        setResult(100, i);
-                        finish();
-                        break;
-                    case "update":
-
-                        //updateBookmark(etUrl.getText().toString(), etTitle.getText().toString(), etNote.getText().toString());
-
-                        break;
-
-                    case "delete":
-
-                        break;
+                if (!url.contains("http://")) {
+                    url = "http://" + url;
                 }
 
+                Intent browse = new Intent(Intent.ACTION_VIEW , Uri.parse(url));
+                startActivity(browse);
             }
+
         });
-        */
     }
 
     @Override
@@ -130,7 +114,9 @@ public class ManageActivity extends Activity {
                     mTitle = etTitle.getText().toString();
                     mNote = etNote.getText().toString();
 
-                    createBookmark(mUrl, mTitle, mNote);
+                    checkEmpty();
+
+                    //createBookmark(mUrl, mTitle, mNote);
 
                     i.putExtra("url", mUrl);
                     i.putExtra("title", mTitle);
@@ -146,8 +132,16 @@ public class ManageActivity extends Activity {
                     mTitle = etTitle.getText().toString();
                     mNote = etNote.getText().toString();
 
+                    checkEmpty();
+
                     //updateBookmark(mUrl, mTitle, mNote);
 
+                    i.putExtra("url", mUrl);
+                    i.putExtra("title", mTitle);
+                    i.putExtra("note", mNote);
+
+                    setResult(200, i);
+                    finish();
                     break;
 
                 case "delete":
@@ -164,9 +158,15 @@ public class ManageActivity extends Activity {
         mNote = note;
     }
 
-    private void updateBookmark(String url, String title, String note) {
-        mUrl = url;
-        mTitle = title;
-        mNote = note;
+    private void checkEmpty() {
+        if (mUrl.equals("")){
+            mUrl = "EMPTY";
+        }
+        if (mTitle.equals("")) {
+            mTitle = "EMPTY";
+        }
+        if (mNote.equals("")) {
+            mNote = "EMPTY";
+        }
     }
 }
