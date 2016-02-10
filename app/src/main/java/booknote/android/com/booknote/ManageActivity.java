@@ -88,8 +88,6 @@ public class ManageActivity extends Activity {
                 mTitle = etTitle.getText().toString();
                 mNote = etNote.getText().toString();
 
-                //updateBookmark(mUrl, mTitle, mNote);
-
                 i.putExtra("url", mUrl);
                 i.putExtra("title", mTitle);
                 i.putExtra("note", mNote);
@@ -116,8 +114,6 @@ public class ManageActivity extends Activity {
 
                     checkEmpty();
 
-                    //createBookmark(mUrl, mTitle, mNote);
-
                     i.putExtra("url", mUrl);
                     i.putExtra("title", mTitle);
                     i.putExtra("note", mNote);
@@ -133,8 +129,6 @@ public class ManageActivity extends Activity {
                     mNote = etNote.getText().toString();
 
                     checkEmpty();
-
-                    //updateBookmark(mUrl, mTitle, mNote);
 
                     i.putExtra("url", mUrl);
                     i.putExtra("title", mTitle);
